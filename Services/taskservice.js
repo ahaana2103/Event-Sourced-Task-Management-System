@@ -10,6 +10,7 @@ class TaskService {
         eventStore.save(event);
         return task;
     }
+    // Update an existing task
     deleteTask(id){
         const event = {
             type: "Task_Deleted",
