@@ -1,5 +1,6 @@
 const eventStore = require("../eventStore/eventStore");
 class TaskService {
+    // Create a new task
     createTask(task) {
         const event = {
             type: "Task_Created",
