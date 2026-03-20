@@ -1,22 +1,20 @@
 const eventStore = require("../eventStore/eventStore");
+const createTaskEvent = require("../events/TaskCreated");
+const deleteTaskEvent = require("../events/TaskDeleted");
 
 class TaskService {
-    // Create a new task
+
     createTask(task) {
-        const event = {
-            type: "Task_Created",
-            data: task
-        };
+        const event = createTaskEvent(task.id, task.title);
         eventStore.save(event);
         return task;
     }
-    // Update an existing task
-    deleteTask(id){
-        const event = {
-            type: "Task_Deleted",
-            data: {id}
-        }
-        eventStore.save(event)
+
+    deleteTask(id) {
+        const event = deleteTaskEvent(id);
+        eventStore.save(event);
+        return { id };
     }
 }
+
 module.exports = new TaskService();
