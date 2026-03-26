@@ -1,61 +1,38 @@
 const eventStore = require("../eventStore/eventStore");
-const { loadSnapshot, saveSnapshot } = require("./snapshot");
-const { logEvent } = require("./logger");
 
 function replayEvents() {
-    // Load Snapshot if available
-    let snapshot = loadSnapshot();
-    let state = snapshot ? snapshot.state : {};
-    let lastEventId = snapshot ? snapshot.lastEventId : null;
+  const events = eventStore.getEvents();
+  const state = {};
 
-    const allEvents = eventStore.getAll();
+  for (const event of events) {
+    const { eventType, payload, aggregateId } = event;
 
-    //Filter only NEW events (after snapshot)
-    const eventsToReplay = lastEventId
-        ? allEvents.filter(event => event.eventId > lastEventId)
-        : allEvents;
-
-    // Apply events in order
-    for (const event of eventsToReplay) {
-        logEvent(event);
-
-        switch (event.eventType) {
-            case "TASK_CREATED":
-                state[event.aggregateId] = {
-                    id: event.aggregateId,
-                    ...event.payload
-                };
-                break;
-
-            case "TASK_UPDATED":
-                if (state[event.aggregateId]) {
-                    state[event.aggregateId] = {
-                        ...state[event.aggregateId],
-                        ...event.payload
-                    };
-                }
-                break;
-
-            case "TASK_DELETED":
-                delete state[event.aggregateId];
-                break;
-
-            default:
-                console.warn("Unknown event type:", event.eventType);
-        }
+    if (eventType === "TaskCreated") {
+      state[aggregateId] = {
+        id: aggregateId,
+        title: payload.title,
+        completed: false
+      };
     }
 
-    // Save new snapshot every 10 events (optional rule)
-    if (eventsToReplay.length >= 10) {
-        const lastEvent = eventsToReplay.at(-1);
-        saveSnapshot({
-            state,
-            lastEventId: lastEvent.eventId,
-            timestamp: Date.now()
-        });
+    else if (eventType === "TaskUpdated") {
+      if (state[aggregateId]) {
+        state[aggregateId].title = payload.title;
+      }
     }
 
-    return state;
+    else if (eventType === "TaskCompleted") {
+      if (state[aggregateId]) {
+        state[aggregateId].completed = true;
+      }
+    }
+
+    else if (eventType === "TaskDeleted") {
+      delete state[aggregateId];
+    }
+  }
+
+  return state;
 }
 
 module.exports = replayEvents;
