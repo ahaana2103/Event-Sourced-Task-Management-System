@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Event Sourcing Task Manager</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #212428;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: rgb(170, 112, 224);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #180808;
+    }
+
+    h3 {
+      margin-top: 20px;
+      color: #050404;
+    }
+
+    input {
+      padding: 8px;
+      margin: 5px 5px 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 45%;
+    }
+
+    button {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-create {
+      background: #4CAF50;
+      color: rgb(248, 230, 230);
+    }
+
+    .btn-update {
+      background: #2196F3;
+      color: white;
+    }
+
+    .btn-complete {
+      background: #FF9800;
+      color: white;
+    }
+
+    .btn-show {
+      background: #673AB7;
+      color: white;
+    }
+
+    .btn-rebuild {
+      background: #009688;
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .task-card {
+      background: #fafafa;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border-left: 5px solid #2196F3;
+    }
+
+    .completed {
+      text-decoration: line-through;
+      color: gray;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .badge-done {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .badge-pending {
+      background: #f44336;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Event Sourcing Task Manager</h1>
+
+    <h3>Create Task</h3>
+    <input id="createId" placeholder="Task ID" />
+    <input id="createTitle" placeholder="Title" />
+    <button class="btn-create" onclick="createTask()">Create</button>
+
+    <h3>Update Task</h3>
+    <input id="updateId" placeholder="Task ID" />
+    <input id="updateTitle" placeholder="New Title" />
+    <button class="btn-update" onclick="updateTask()">Update</button>
+
+    <h3>Complete Task</h3>
+    <input id="completeId" placeholder="Task ID" />
+    <button class="btn-complete" onclick="completeTask()">Complete</button>
+
+    <h3>Tasks</h3>
+    <button class="btn-show" onclick="getTasks()">Show All Tasks</button>
+    <button class="btn-rebuild" onclick="rebuild()">Rebuild From Events</button>
+
+    <div id="tasks"></div>
+  </div>
+
+  <script>
+    const API = "http://localhost:3000/tasks";
+
+    async function createTask() {
+      const taskId = document.getElementById("createId").value;
+      const title = document.getElementById("createTitle").value;
+
+      await fetch(`${API}/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ taskId, title })
+      });
+
+      getTasks();
+    }
+
+    async function updateTask() {
+      const taskId = document.getElementById("updateId").value;
+      const title = document.getElementById("updateTitle").value;
+
+      await fetch(`${API}/update`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ taskId, title })
+      });
+
+      getTasks();
+    }
+
+    async function completeTask() {
+      const taskId = document.getElementById("completeId").value;
+
+      await fetch(`${API}/complete`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ taskId })
+      });
+
+      getTasks();
+    }
+
+    async function getTasks() {
+      const res = await fetch(`${API}`);
+      const data = await res.json();
+      displayTasks(data);
+    }
+
+    async function rebuild() {
+      const res = await fetch("http://localhost:3000/rebuild");
+      const data = await res.json();
+      displayTasks(data);
+      alert("State Rebuilt");
+    }
+
+    function displayTasks(tasks) {
+      const container = document.getElementById("tasks");
+      container.innerHTML = "";
+
+      for (const id in tasks) {
+        const task = tasks[id];
+
+        const div = document.createElement("div");
+        div.className = "task-card";
+
+        div.innerHTML = `
+      <strong class="${task.completed ? "completed" : ""}">
+        ${task.title}
+      </strong><br>
+      ID: ${task.id}<br>
+      <span class="badge ${task.completed ? "badge-done" : "badge-pending"}">
+        ${task.completed ? "Completed" : "Pending"}
+      </span>
+    `;
+
+        container.appendChild(div);
+      }
+    }
+
+    getTasks();
+  </script>
+
+</body>
+
+</html>
