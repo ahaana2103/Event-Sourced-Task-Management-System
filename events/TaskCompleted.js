@@ -1,5 +1,6 @@
 const generateId = require("../utils/generateId");
 module.exports = function TaskCompleted(taskId) {
+  const now = new Date();
   return {
     eventId: generateId(),
     aggregateId: taskId,
@@ -7,6 +8,6 @@ module.exports = function TaskCompleted(taskId) {
     payload: {
       completed: true
     },
-    timestamp: Date.now()
+    timestamp: now.toISOString()
   };
 };

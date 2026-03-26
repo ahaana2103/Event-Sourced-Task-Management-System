@@ -1,4 +1,5 @@
 module.exports = function TaskUpdated(taskId, title) {
+  const now = new Date(); // current date & time
   return {
     eventId: Date.now().toString(),
     aggregateId: taskId,
@@ -6,6 +7,6 @@ module.exports = function TaskUpdated(taskId, title) {
     payload: {
       title: title
     },
-    timestamp: new Date()
+    timestamp: now.toISOString() // human readable format
   };
 };
