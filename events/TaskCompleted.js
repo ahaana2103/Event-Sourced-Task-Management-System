@@ -4,7 +4,7 @@ module.exports = function TaskCompleted(taskId) {
   return {
     eventId: generateId(),
     aggregateId: taskId,
-    eventType: "Task Completed",
+    eventType: "TaskCompleted",
     payload: {
       completed: true
     },
