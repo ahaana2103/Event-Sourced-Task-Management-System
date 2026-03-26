@@ -1,11 +1,12 @@
+const generateId = require("../utils/generateId");
 module.exports = function TaskCreated(taskId, title) {
   return {
-    eventId: Date.now().toString(),
+    eventId: generateId(),
     aggregateId: taskId,
     eventType: "TaskCreated",
     payload: {
       title: title
     },
-    timestamp: new Date()
+    timestamp: Date.now()
   };
 };
