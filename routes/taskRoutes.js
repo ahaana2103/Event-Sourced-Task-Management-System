@@ -1,43 +1,31 @@
 const express = require("express");
 const router = express.Router();
-const taskService = require("../Services/taskservice");
+const taskStore = require("../Services/taskservice");
 
-// Create
+// Create Task
 router.post("/create", (req, res) => {
   const { taskId, title } = req.body;
-  try {
-    const event = taskService.createTask(taskId, title);
-    res.json(event);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
+  const task = taskStore.createTask({ id: taskId, title });
+  res.json(task);
 });
 
-// Update
+// Update Task
 router.put("/update", (req, res) => {
   const { taskId, title } = req.body;
-  try {
-    const event = taskService.updateTask(taskId, title);
-    res.json(event);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
+  const task = taskStore.updateTask(taskId, title);
+  res.json(task);
 });
 
-// Complete
+// Complete Task
 router.put("/complete", (req, res) => {
   const { taskId } = req.body;
-  try {
-    const event = taskService.completeTask(taskId);
-    res.json(event);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
+  const task = taskStore.completeTask(taskId);
+  res.json(task);
 });
 
 // Get all tasks
 router.get("/", (req, res) => {
-  const tasks = taskService.getAllTasks();
+  const tasks = taskStore.getAllTasks();
   res.json(tasks);
 });
 
