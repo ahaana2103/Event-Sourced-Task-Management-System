@@ -2,7 +2,11 @@ const eventStore = require("../eventStore/eventStore");
 const createTaskEvent = require("../events/TaskCreated");
 const updateTaskEvent = require("../events/TaskUpdated");
 const completeTaskEvent = require("../events/TaskCompleted");
+const updateTaskEvent = require("../events/TaskUpdated");
+const completeTaskEvent = require("../events/TaskCompleted");
 const deleteTaskEvent = require("../events/TaskDeleted");
+const generateId = require("../utils/generateId");
+const { buildProjection } = require("../projections/taskProjection");
 
 class TaskService {
 

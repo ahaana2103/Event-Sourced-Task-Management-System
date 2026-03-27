@@ -1,0 +1,14 @@
+{
+  "lastSequence": 3,
+  "state": {
+    "tasks": {
+      "16e59eb5-794e-460f-974e-854708e074e1": {
+        "id": "16e59eb5-794e-460f-974e-854708e074e1",
+        "title": "Draft final report",
+        "completed": true,
+        "deleted": false
+      }
+    }
+  },
+  "createdAt": "2026-03-27T07:10:41.950Z"
+}

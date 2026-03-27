@@ -1,14 +1,36 @@
-const fs = require('fs');
+const fs = require("fs");
+const path = require("path");
 
-const SNAPSHOT_FILE = './snapshots.json';
+const DATA_DIRECTORY = path.join(__dirname, "..", "data");
+const SNAPSHOT_FILE = path.join(DATA_DIRECTORY, "snapshots.json");
 
-function saveSnapshot(state) {
-    fs.writeFileSync(SNAPSHOT_FILE, JSON.stringify(state, null, 2));
+function ensureSnapshotDirectory() {
+    if (!fs.existsSync(DATA_DIRECTORY)) {
+        fs.mkdirSync(DATA_DIRECTORY, { recursive: true });
+    }
+}
+
+function saveSnapshot(state, lastSequence) {
+    ensureSnapshotDirectory();
+
+    const snapshot = {
+        lastSequence,
+        state,
+        createdAt: new Date().toISOString()
+    };
+
+    fs.writeFileSync(SNAPSHOT_FILE, JSON.stringify(snapshot, null, 2));
+    return snapshot;
 }
 
 function loadSnapshot() {
-    if (!fs.existsSync(SNAPSHOT_FILE)) return null;
-    return JSON.parse(fs.readFileSync(SNAPSHOT_FILE));
+    ensureSnapshotDirectory();
+
+    if (!fs.existsSync(SNAPSHOT_FILE)) {
+        return null;
+    }
+
+    return JSON.parse(fs.readFileSync(SNAPSHOT_FILE, "utf8"));
 }
 
 module.exports = {

@@ -1,4 +1,5 @@
 # Event-Sourced-Task-Management-System
+<<<<<<< Updated upstream
 Event-Sourced Task Management System built with Node.js and Express.js that records task updates as events and reconstructs state from the event log.
 
 Event Sourcing Task Manager
@@ -86,3 +87,21 @@ This project demonstrates how Event Sourcing helps in:
 - Improving debugging  
 
 ---
+=======
+
+Event-Sourced Task Management System built with Node.js and Express.js semantics that records task updates as immutable events and reconstructs current state from an append-only event log.
+
+## What It Demonstrates
+
+- Commands create immutable task events instead of directly mutating stored state
+- A file-backed event store appends events and assigns replay order with `sequence`
+- Task projections rebuild the latest task view by replaying events
+- Snapshotting saves intermediate state so rebuilds can resume from the last stored sequence
+
+## Main Files
+
+- `eventStore/eventStore.js` stores and replays the append-only event log
+- `projections/taskProjection.js` derives current task state from historical events
+- `utils/snapshot.js` persists and loads projection snapshots
+- `Services/taskservice.js` exposes task commands and query helpers
+>>>>>>> Stashed changes

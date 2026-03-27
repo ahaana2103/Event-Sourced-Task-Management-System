@@ -1,0 +1,4 @@
+{"eventId":"326d90ef-1fab-47d5-91ee-d5e8df640243","aggregateId":"16e59eb5-794e-460f-974e-854708e074e1","eventType":"TaskCreated","payload":{"title":"Draft report"},"timestamp":"2026-03-27T07:10:41.891Z","sequence":1}
+{"eventId":"e5c55d0e-c7d6-4463-9d16-955ec92a30f3","aggregateId":"16e59eb5-794e-460f-974e-854708e074e1","eventType":"TaskUpdated","payload":{"title":"Draft final report"},"timestamp":"2026-03-27T07:10:41.914Z","sequence":2}
+{"eventId":"03002260-e627-4ac2-a095-fbb7dedb8c91","aggregateId":"16e59eb5-794e-460f-974e-854708e074e1","eventType":"TaskCompleted","payload":{"taskId":"16e59eb5-794e-460f-974e-854708e074e1"},"timestamp":"2026-03-27T07:10:41.931Z","sequence":3}
+{"eventId":"fe2bcd5c-e1fb-48dd-9804-cf09757a99ea","aggregateId":"16e59eb5-794e-460f-974e-854708e074e1","eventType":"TaskDeleted","payload":{"taskId":"16e59eb5-794e-460f-974e-854708e074e1"},"timestamp":"2026-03-27T07:10:41.950Z","sequence":4}

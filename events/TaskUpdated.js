@@ -1,12 +1,18 @@
+const generateId = require("../utils/generateId");
+
 module.exports = function TaskUpdated(taskId, title) {
   const now = new Date(); // current date & time
   return {
-    eventId: Date.now().toString(),
+    eventId: generateId(),
     aggregateId: taskId,
     eventType: "TaskUpdated",
     payload: {
-      title: title
+      title
     },
+<<<<<<< Updated upstream
     timestamp: now.toISOString() // human readable format
+=======
+    timestamp: new Date().toISOString()
+>>>>>>> Stashed changes
   };
 };
