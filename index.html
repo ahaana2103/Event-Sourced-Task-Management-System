@@ -186,7 +186,8 @@
     async function rebuild() {
       const res = await fetch("http://localhost:3000/rebuild");
       const data = await res.json();
-      displayTasks(data);
+      console.log("Rebuilt Data:", data);
+      displayTasks(data.state || data);
       alert("State Rebuilt");
     }
 
@@ -194,26 +195,30 @@
       const container = document.getElementById("tasks");
       container.innerHTML = "";
 
-      for (const id in tasks) {
-        const task = tasks[id];
+      if (!tasks || Object.keys(tasks).length === 0) {
+        container.innerHTML = "<p>No tasks found</p>";
+        return;
+      }
 
+      Object.values(tasks).forEach(task => {
         const div = document.createElement("div");
-        div.className = "task-card";
+
+        div.style.border = "1px solid #ccc";
+        div.style.padding = "10px";
+        div.style.marginTop = "10px";
+        div.style.borderRadius = "8px";
 
         div.innerHTML = `
-      <strong class="${task.completed ? "completed" : ""}">
+      <strong style="${task.completed ? 'text-decoration: line-through;' : ''}">
         ${task.title}
       </strong><br>
       ID: ${task.id}<br>
-      <span class="badge ${task.completed ? "badge-done" : "badge-pending"}">
-        ${task.completed ? "Completed" : "Pending"}
-      </span>
+      Completed: ${task.completed ? "Yes" : "No"}
     `;
 
         container.appendChild(div);
-      }
+      });
     }
-
     getTasks();
   </script>
 
