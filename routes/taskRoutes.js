@@ -3,29 +3,29 @@ const router = express.Router();
 const taskStore = require("../Services/taskservice");
 
 // Create Task
-router.post("/create", (req, res) => {
+router.post("/create",async (req, res) => {
   const { taskId, title } = req.body;
-  const task = taskStore.createTask({ id: taskId, title });
+  const task = await taskStore.createTask({ id: taskId, title });
   res.json(task);
 });
 
 // Update Task
-router.put("/update", (req, res) => {
+router.put("/update",async (req, res) => {
   const { taskId, title } = req.body;
-  const task = taskStore.updateTask(taskId, title);
+  const task =await taskStore.updateTask(taskId, title);
   res.json(task);
 });
 
 // Complete Task
-router.put("/complete", (req, res) => {
+router.put("/complete", async (req, res) => {
   const { taskId } = req.body;
-  const task = taskStore.completeTask(taskId);
+  const task = await taskStore.completeTask(taskId);
   res.json(task);
 });
 
 // Get all tasks
-router.get("/", (req, res) => {
-  const tasks = taskStore.getAllTasks();
+router.get("/", async (req, res) => {
+  const tasks = await taskStore.getAllTasks();
   res.json(tasks);
 });
 
