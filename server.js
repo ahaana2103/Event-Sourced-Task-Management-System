@@ -5,6 +5,11 @@ const taskRoutes = require("./routes/taskRoutes");
 const replay = require("./utils/replay"); 
 const { logEvent } = require("./utils/logger"); 
 
+const mongoose = require("mongoose");
+mongoose.connect("mongodb://127.0.0.1:27017/taskDB")
+.then(() => console.log("MongoDB Connected"))
+.catch(err => console.error(err));
+
 const app = express();
 const PORT = 3000;
 app.use(cors());
