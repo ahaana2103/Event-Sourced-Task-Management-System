@@ -1,8 +1,5 @@
 const generateId = require("../utils/generateId");
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 module.exports = function TaskCreated(taskId, title) {
   const now = new Date();
   return {
@@ -12,10 +9,6 @@ module.exports = function TaskCreated(taskId, title) {
     payload: {
       title
     },
-<<<<<<< Updated upstream
     timestamp: now.toISOString()
-=======
-    timestamp: new Date().toISOString()
->>>>>>> Stashed changes
   };
 };

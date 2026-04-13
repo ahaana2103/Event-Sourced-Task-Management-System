@@ -2,11 +2,7 @@ const eventStore = require("../eventStore/eventStore");
 const createTaskEvent = require("../events/TaskCreated");
 const updateTaskEvent = require("../events/TaskUpdated");
 const completeTaskEvent = require("../events/TaskCompleted");
-const updateTaskEvent = require("../events/TaskUpdated");
-const completeTaskEvent = require("../events/TaskCompleted");
 const deleteTaskEvent = require("../events/TaskDeleted");
-const generateId = require("../utils/generateId");
-const { buildProjection } = require("../projections/taskProjection");
 
 class TaskService {
 
@@ -16,21 +12,21 @@ class TaskService {
     return { id: task.id, title: task.title, completed: false };
   }
 
-  updateTask(taskId, newTitle) {
+  async updateTask(taskId, newTitle) {
     const event = updateTaskEvent(taskId, newTitle);
-    eventStore.save(event);
+    await eventStore.save(event);
     return { id: taskId, title: newTitle };
   }
 
-  completeTask(taskId) {
+  async completeTask(taskId) {
     const event = completeTaskEvent(taskId);
-    eventStore.save(event);
+    await eventStore.save(event);
     return { id: taskId, completed: true };
   }
 
-  deleteTask(taskId) {
+  async deleteTask(taskId) {
     const event = deleteTaskEvent(taskId);
-    eventStore.save(event);
+    await eventStore.save(event);
     return { id: taskId };
   }
 

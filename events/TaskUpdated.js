@@ -9,10 +9,6 @@ module.exports = function TaskUpdated(taskId, title) {
     payload: {
       title
     },
-<<<<<<< Updated upstream
     timestamp: now.toISOString() // human readable format
-=======
-    timestamp: new Date().toISOString()
->>>>>>> Stashed changes
   };
 };

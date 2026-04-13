@@ -18,9 +18,9 @@ app.use(express.json());
 // Mount Task API routes (no auth for now)
 app.use("/tasks", taskRoutes);
 
-app.get("/rebuild", (req, res) => {
+app.get("/rebuild", async (req, res) => {
   try {
-    const state = replay();
+    const state = await replay();
     logEvent({ message: "State rebuilt from events", state });
     res.json(state);
   } catch (err) {

@@ -1,7 +1,7 @@
 const eventStore = require("../eventStore/eventStore");
 
-function replayEvents() {
-  const events = eventStore.getEvents();
+async function replayEvents() {
+  const events = await eventStore.getEvents();
   const state = {};
 
   for (const event of events) {
