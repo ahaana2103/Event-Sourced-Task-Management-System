@@ -10,9 +10,9 @@ const { buildProjection } = require("../projections/taskProjection");
 
 class TaskService {
 
-  createTask(task) {
+  async createTask(task) {
     const event = createTaskEvent(task.id, task.title);
-    eventStore.save(event);
+    await eventStore.save(event);
     return { id: task.id, title: task.title, completed: false };
   }
 
@@ -34,9 +34,9 @@ class TaskService {
     return { id: taskId };
   }
 
-  getAllTasks() {
+  async getAllTasks() {
     const tasks = {};
-    const events = eventStore.getEvents();
+    const events =await eventStore.getEvents();
 
     events.forEach(event => {
       const { eventType, payload, aggregateId } = event;
