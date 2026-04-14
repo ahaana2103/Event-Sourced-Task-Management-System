@@ -25,16 +25,11 @@ class TaskService {
   }
 
   async deleteTask(taskId) {
-<<<<<<< HEAD
-    const event = deleteTaskEvent(taskId);
-    await eventStore.save(event);
-=======
     console.log("TaskService.deleteTask received taskId:", taskId);
     const event = deleteTaskEvent(taskId);
     console.log("Generated delete event:", event);
     await eventStore.save(event);
     console.log("Delete event saved for taskId:", taskId);
->>>>>>> 909bdd0 (Updated wih delete function)
     return { id: taskId };
   }
 
