@@ -2,37 +2,47 @@ const eventStore = require("../eventStore/eventStore");
 
 async function replayEvents() {
   const events = await eventStore.getEvents();
-  const state = {};
-
-  for (const event of events) {
+  return events.reduce((state, event) => {
     const { eventType, payload, aggregateId } = event;
 
     if (eventType === "TaskCreated") {
-      state[aggregateId] = {
-        id: aggregateId,
-        title: payload.title,
-        completed: false
+      return {
+        ...state,
+        [aggregateId]: {
+          id: aggregateId,
+          title: payload.title,
+          completed: false
+        }
       };
     }
 
-    else if (eventType === "TaskUpdated") {
-      if (state[aggregateId]) {
-        state[aggregateId].title = payload.title;
-      }
+    if (eventType === "TaskUpdated" && state[aggregateId]) {
+      return {
+        ...state,
+        [aggregateId]: {
+          ...state[aggregateId],
+          title: payload.title
+        }
+      };
     }
 
-    else if (eventType === "TaskCompleted") {
-      if (state[aggregateId]) {
-        state[aggregateId].completed = true;
-      }
+    if (eventType === "TaskCompleted" && state[aggregateId]) {
+      return {
+        ...state,
+        [aggregateId]: {
+          ...state[aggregateId],
+          completed: true
+        }
+      };
     }
 
-    else if (eventType === "TaskDeleted") {
-      delete state[aggregateId];
+    if (eventType === "TaskDeleted" && state[aggregateId]) {
+      const { [aggregateId]: deletedTask, ...remainingState } = state;
+      return remainingState;
     }
-  }
 
-  return state;
+    return state;
+  }, {});
 }
 
 module.exports = replayEvents;
