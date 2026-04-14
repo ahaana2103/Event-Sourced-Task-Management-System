@@ -34,38 +34,48 @@ class TaskService {
   }
 
   async getAllTasks() {
-    const tasks = {};
     const events =await eventStore.getEvents();
-
-    events.forEach(event => {
+    return events.reduce((tasks, event) => {
       const { eventType, payload, aggregateId } = event;
 
       if (eventType === "TaskCreated") {
-        tasks[aggregateId] = {
-          id: aggregateId,
-          title: payload.title,
-          completed: false
+        return {
+          ...tasks,
+          [aggregateId]: {
+            id: aggregateId,
+            title: payload.title,
+            completed: false
+          }
         };
       }
 
-      else if (eventType === "TaskUpdated") {
-        if (tasks[aggregateId]) {
-          tasks[aggregateId].title = payload.title;
-        }
+      if (eventType === "TaskUpdated" && tasks[aggregateId]) {
+        return {
+          ...tasks,
+          [aggregateId]: {
+            ...tasks[aggregateId],
+            title: payload.title
+          }
+        };
       }
 
-      else if (eventType === "TaskCompleted") {
-        if (tasks[aggregateId]) {
-          tasks[aggregateId].completed = true;
-        }
+      if (eventType === "TaskCompleted" && tasks[aggregateId]) {
+        return {
+          ...tasks,
+          [aggregateId]: {
+            ...tasks[aggregateId],
+            completed: true
+          }
+        };
       }
 
-      else if (eventType === "TaskDeleted") {
-        delete tasks[aggregateId];
+      if (eventType === "TaskDeleted" && tasks[aggregateId]) {
+        const { [aggregateId]: deletedTask, ...remainingTasks } = tasks;
+        return remainingTasks;
       }
-    });
 
-    return tasks;
+      return tasks;
+    }, {});
   }
 }
 
