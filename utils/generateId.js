@@ -1,7 +1,5 @@
-const { randomUUID } = require('crypto');
-
 function generateId() {
-    return randomUUID();
+    return `evt_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 }
 
 module.exports = generateId;
