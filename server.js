@@ -11,7 +11,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/taskDB")
 .catch(err => console.error(err));
 
 const app = express();
-const PORT = 3000;
+const PORT = 4020;
 app.use(cors());
 app.use(express.json());
 

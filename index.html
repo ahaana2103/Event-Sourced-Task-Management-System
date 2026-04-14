@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Event Sourcing Task Manager</title>
+  <title>Event Sourced Task Manager</title>
 
   <style>
     body {
@@ -63,6 +63,11 @@
       color: white;
     }
 
+    .btn-delete {
+      background: #dd1313;
+      color: white;
+    }
+
     .btn-show {
       background: #673AB7;
       color: white;
@@ -113,7 +118,7 @@
 <body>
 
   <div class="container">
-    <h1>Event Sourcing Task Manager</h1>
+    <h1>Event Sourced Task Manager</h1>
 
     <h3>Create Task</h3>
     <input id="createId" placeholder="Task ID" />
@@ -129,6 +134,10 @@
     <input id="completeId" placeholder="Task ID" />
     <button class="btn-complete" onclick="completeTask()">Complete</button>
 
+    <h3>Delete Task</h3>
+    <input id="deleteId" placeholder="Task ID" />
+    <button class="btn-delete" onclick="deleteTask()">Delete</button>
+
     <h3>Tasks</h3>
     <button class="btn-show" onclick="getTasks()">Show All Tasks</button>
     <button class="btn-rebuild" onclick="rebuild()">Rebuild From Events</button>
@@ -137,13 +146,13 @@
   </div>
 
   <script>
-    const API = "http://localhost:3000/tasks";
+    const API = "http://localhost:4020";
 
     async function createTask() {
       const taskId = document.getElementById("createId").value;
       const title = document.getElementById("createTitle").value;
 
-      await fetch(`${API}/create`, {
+      await fetch(`${API}/tasks/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ taskId, title })
@@ -156,7 +165,7 @@
       const taskId = document.getElementById("updateId").value;
       const title = document.getElementById("updateTitle").value;
 
-      await fetch(`${API}/update`, {
+      await fetch(`${API}/tasks/update`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ taskId, title })
@@ -168,7 +177,7 @@
     async function completeTask() {
       const taskId = document.getElementById("completeId").value;
 
-      await fetch(`${API}/complete`, {
+      await fetch(`${API}/tasks/complete`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ taskId })
@@ -176,15 +185,33 @@
 
       getTasks();
     }
+    async function deleteTask() {
+      const taskId = document.getElementById("deleteId").value;
+
+      try {
+        const res = await fetch(`${API}/tasks/delete`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ taskId })
+        });
+
+        const data = await res.json();
+        console.log("Delete response:", data);
+
+        await getTasks();
+      } catch (err) {
+        console.error("Delete error:", err);
+      }
+    }
 
     async function getTasks() {
-      const res = await fetch(`${API}`);
+      const res = await fetch(`${API}/tasks`);
       const data = await res.json();
       displayTasks(data);
     }
 
     async function rebuild() {
-      const res = await fetch("http://localhost:3000/rebuild");
+      const res = await fetch("http://localhost:4020/rebuild");
       const data = await res.json();
       console.log("Rebuilt Data:", data);
       displayTasks(data.state || data);
